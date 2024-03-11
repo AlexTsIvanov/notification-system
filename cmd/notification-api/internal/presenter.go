@@ -9,8 +9,10 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+//go:generate mockgen --source=presenter.go --destination mocks/presenter.go --package mocks
+
 type Controller interface {
-	SendNotification(ctx context.Context, notification Notification) error
+	SendNotification(ctx context.Context, notification NotificationRequest) error
 }
 
 type Validator interface {
@@ -42,12 +44,7 @@ func (p *NotificationPresenter) HandleSendNotification(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, "Failed to validate body")
 	}
 
-	notification := Notification{
-		Channel:  request.Channel,
-		Content:  request.Content,
-		Receiver: request.Receiver,
-	}
-	if err := p.contoller.SendNotification(c.Request().Context(), notification); err != nil {
+	if err := p.contoller.SendNotification(c.Request().Context(), request); err != nil {
 		logrus.Errorf("failed to send notification: %v", err)
 		return echo.NewHTTPError(http.StatusBadRequest, "Failed to send notification")
 	}

@@ -8,6 +8,9 @@ import (
 	"github.com/AlexTsIvanov/notification-system/pkg/channels/sms"
 )
 
+
+//go:generate mockgen --source=factory.go --destination ../mocks/factory.go --package mocks
+
 // needs to be implemented by all sending channels
 type Sender interface {
 	Send(message, recipient string) error

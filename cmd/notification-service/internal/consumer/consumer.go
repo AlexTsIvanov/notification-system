@@ -10,6 +10,8 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+//go:generate mockgen --source=consumer.go --destination ../mocks/consumer.go --package mocks
+
 type Reader interface {
 	Read(ctx context.Context) (event types.EventContext, err error)
 	Ack(event types.EventContext) error
